@@ -1,0 +1,53 @@
+# training IJEPA with Vit-Base on TinyImagenet
+
+out_dir: 'out-ijepatiny-tinyimagenet'
+device: 'cuda'
+dtype: 'float16'
+init_from: 'scratch'
+compile: false # set to True if on mac or linux. not supported on windows
+
+# linear probing 
+lnprobe_split: 'valid' # use 'valid' set ~10k images so eval is faster
+lnprobe_epochs: 50 # epochs
+lnprobe_interval: 10
+lnprobe_only: False
+lnprobe_grad_accumulation_steps: 1
+lnprobe_learning_rate: 0.01
+lnprobe_decay_epochs: 30
+
+# model
+n_layer: 12
+n_head: 4
+n_embd: 256
+pred_layer: 6
+pred_embd: 256
+bias: true
+dropout: 0.0
+img_size: 64
+in_channels: 3
+patch_size: 8
+n_targets: 4
+context_scale: [0.85, 1.0]
+target_aspect_ratio: [0.75, 1.5]
+target_scale: [0.15, 0.2]
+n_classes: 200
+
+# data
+dataset: 'tiny_imagenet'
+batch_size: 384
+grad_accumulation_steps: 1
+
+# optimizer
+start_lr: 0.0003
+learning_rate: 0.002
+final_lr: 0.0002
+max_epochs: 80
+warmup_epochs: 3
+lr_decay_epochs: 80 
+weight_decay: 0.1
+min_weight_decay: 0.01
+grad_clip: 1.0
+
+# momentum
+momentum: 0.9
+max_momentum: 0.9
