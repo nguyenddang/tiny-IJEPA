@@ -34,13 +34,13 @@ This will training a single linear layer to take output patch embedding from IJE
 
 [I-JEPA](https://arxiv.org/abs/2301.08243) is a self-supervised learning approach for images. The idea is simple: given an image with some part masked out (context block), predict the masked out portion (target block). By doing this well, the model will have good semantic understanding of images. The key point here is that prediction is done in latent space, not pixel space. I like to think about this latent prediction as a way to excluded some unnecessary fine-grained noise and focus on the overall semantic content. This is trivial as models that tries to predict pixels such as [Masked Autoencoders](https://arxiv.org/abs/2111.06377) have to allocated substantial amount of its capacity to learning fine-grained details
 
-<img src="assets/ijepa_architecture.png" alt="IJEPA Architecture" height="600">
+<img src="assets/ijepa_architecture.png" alt="IJEPA Architecture" height="400">
 
 Okay great, latent prediction helps the model to learn overall semantic content, but how do we know what the latent representation should be? I-JEPA uses the output of the target encoder as "ground truth" for the context encoder to learn what the latent representation should be. The context encoder is trained through gradient descent while the target encoder's weights are updated using the Exponential Moving Average (EMA) of the context encoder's weights. 
 
 **Note** that if target encoder is also trained using gradient descent, the model will collapse aka latent representation will converge to 0. We can track if the model is collapsing during training by watching the norm of target block prediction.
 
-<img src='assets/mag.png'>
+<img src='assets/mag.png' height="400">
 
 The Exponential Moving Average (EMA) update for the target encoder's weights can be formulated as follows:
 
@@ -56,11 +56,11 @@ This formula ensures that the target encoder's weights are a smooth, slowly chan
 # how to get context and target block
 According to the paper, we randomly extract 4 target blocks from every patched image. Each block's aspect ratio are chosen randomly from range (0.75,1.5), and scale from range (0.15, 0.2). Context block are also randomly sampled with a random scale in range (0.85, 1.0) from the original patched image, then any overlapping patches with all target blocks are removed. Not a big fan of these hardcoded number, although the paper did experiment with other hyperparameters and these seems to work best. 
 
-<img src="assets/blocks.png" alt="Blocks" height="600"> 
+<img src="assets/blocks.png" alt="Blocks" height="400"> 
 
 You can try playing with `img_visual.ipynb` to see how the images are being masked in tiny-IJEPA. Here are some samples
 
-<img src="assets/img_mask.png" height="600">
+<img src="assets/img_mask.png" height="400">
 
 # training 
 Let's talk forwarding I-JEPA. 
@@ -79,7 +79,8 @@ Backpropagate predictor, context encoder then update target encoder using EMA. T
 # linear probing
 
 We can't directly evaluate I-JEPA performance using the training loss as it is not an objective metric. Kinda looks like this...
-<img src="assets/loss.png">
+
+<img src="assets/loss.png" height="400">
 
 To evaluate, we follow the linear protocol of training a **single** linear layer on top of the frozen **target encoder** for classification task. The paper propose 2 input types for linear probing.
 - average-pooled patches embedding from last layer of target encoder.
