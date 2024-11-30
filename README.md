@@ -27,7 +27,7 @@ python train.py configs/train_ijepatiny_tinyimagenet.yml
 ```
 Here we train IJEPA-tiny which patches `3x64x64` image into `3x8x8` with embedding dimension of 256. Context and target encoder has 12 layers with 4 heads and predictor has 6 layers with 4 heads. After ~2 hours on a laptop GPU you should have a good pretrained IJEPA. Now, to see how well it performs on classification task, run:
 ```
-python train.py configs/train_ijepatiny_tinyimagenet.yml --overrides init_from='resume' lnrpobe_only=True lnprobe_split='train' 
+python train.py configs/train_ijepatiny_tinyimagenet.yml --overrides init_from='resume' lnprobe_only=True lnprobe_split='train' 
 ```
 This will training a single linear layer to take output patch embedding from IJEPA target encoder and classify to labels on entire tiny imagenet. We should see ~ 87% top 1 accuracy. Other default configs include `Vit-small 32M` and `Vit-base 94M`.
 # intro to IJEPA
